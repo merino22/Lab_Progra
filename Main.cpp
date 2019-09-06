@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <iostream>
 using namespace sf;
 
 //tamano de pantalla
@@ -7,6 +8,7 @@ int Tamano = 16;
 //Tamano 
 int w = Tamano * N;
 int h = Tamano * M;
+bool arriba=true, abajo=true, derecha=true, izquierda=true;
 
 int dir, num = 4;
 
@@ -33,15 +35,18 @@ void SnakeMov()
 	}
 
 	// Lee teclas presionadas validacion
-	if (dir == 0) s[0].y += 1;
-	if (dir == 1) s[0].x -= 1;
-	if (dir == 2) s[0].x += 1;
-	if (dir == 3) s[0].y -= 1;
-
-	//if (dir == 0 || dir == 1 || dir == 3 || dir == 4) {
-	//	s[0].x == 0;
-	//	s[0].y == 0;
-	//}
+	if (dir == 0) {
+		s[0].y += 1;
+	}
+	if (dir == 1) {
+		s[0].x -= 1;
+	}
+	if (dir == 2) {
+		s[0].x += 1;
+	}
+	if (dir == 3) {
+		s[0].y -= 1;
+	}
 
 	//tamano de snake cuando come comida
 	if ((s[0].x == f.x) && (s[0].y == f.y))
@@ -59,12 +64,7 @@ void SnakeMov()
 
 
 	// validacion de piezas que se remueven al tocarse el mismo
-	for (int i = 1; i < num; i++) {
-		if (s[0].y == s[i].y) {
-			num = 0;
-			system("puase");
-		}
-	}
+
 }
 
 int main()
@@ -103,10 +103,30 @@ int main()
 				window.close();
 		}
 		//Manejo de teclas.
-		if (Keyboard::isKeyPressed(Keyboard::Left)) dir = 1;
-		if (Keyboard::isKeyPressed(Keyboard::Right))  dir = 2;
-		if (Keyboard::isKeyPressed(Keyboard::Up)) dir = 3;
-		if (Keyboard::isKeyPressed(Keyboard::Down)) dir = 0;
+		if (Keyboard::isKeyPressed(Keyboard::Left)&&izquierda) {
+			derecha = false;
+			abajo = true;
+			arriba = true;
+			dir = 1;
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Right)&&derecha) {
+			izquierda = false;
+			abajo = true;
+			arriba = true;
+			dir = 2;
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Up)&&arriba) {
+			izquierda = true;
+			derecha = true;
+			abajo = false;
+			dir = 3;
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Down)&&abajo) {
+			dir = 0;
+			derecha = true;
+			izquierda = true;
+			arriba = false;
+		}
 
 		//Andir movimiento
 		if (tiempo > delay) {
@@ -122,10 +142,21 @@ int main()
 
 		// Compilacion de juego 
 
+		for (int i = 0; i < num; i++)
+		{
+			if (s[i].x!=s[i].y)
+			{
+
+			}
+			else {
+				break;
+			}
+		}
 			for (int i = 0; i < num; i++)
 			{
 				//Spawnear Serpiente
-				sprite2.setPosition(s[i].x*Tamano, s[i].y*Tamano);  window.draw(sprite2);
+				sprite2.setPosition(s[i].x*Tamano, s[i].y*Tamano); 
+				window.draw(sprite2);
 			}
 		//Spawnear la comida
 		sprite2.setPosition(f.x*Tamano, f.y*Tamano);  window.draw(sprite2);
